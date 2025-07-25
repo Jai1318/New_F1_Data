@@ -1,0 +1,101 @@
+from fpdf import FPDF
+
+class PDF(FPDF):
+    def header(self):
+        self.set_font('Arial', 'B', 12)
+        self.cell(0, 10, 'F1 Power BI Dashboard Guide with Drill-Downs & DAX', ln=True, align='C')
+        self.ln(5)
+
+    def chapter_title(self, title):
+        self.set_font('Arial', 'B', 12)
+        self.set_fill_color(220, 220, 220)
+        self.cell(0, 10, title, ln=True, fill=True)
+        self.ln(2)
+
+    def chapter_body(self, text):
+        self.set_font('Arial', '', 11)
+        self.multi_cell(0, 8, text)
+        self.ln()
+
+pdf = PDF()
+pdf.set_auto_page_break(auto=True, margin=15)
+pdf.add_page()
+
+sections = [
+    ("1. Navigation Structure", """
+Power BI Recommended Pages:
+- Dashboard Overview: KPIs + slicers for Year, Driver, Team
+- Driver Profile: Wins, points, fastest laps, DNF, positions
+- Constructor Analysis: Points, reliability, drivers, podiums
+- Race Explorer: Select a race → see lap times, status, etc.
+- Circuit Insights: Geo, ticket prices, win % by track
+- Pit Strategy: Avg stops, stop duration, stop impact
+- Trend Analysis: Season timeline, ranking over time
+- Calendar View: Races by month, weekday, quarter
+
+Navigation Tips:
+- Insert > Buttons > Page navigation
+- Use bookmarks for home menu
+"""),
+    ("2. Advanced DAX Calculations", """
+Podium Finishes:
+  Podium Finishes := CALCULATE(COUNTROWS(fact_race_results), fact_race_results[finish_position] <= 3)
+
+Total Wins:
+  Total Wins := CALCULATE(COUNTROWS(fact_race_results), fact_race_results[win_flag] = TRUE())
+
+Average Finish:
+  Avg Finish Position := AVERAGE(fact_race_results[finish_position])
+
+Finish Rate:
+  Finish Rate % := DIVIDE(COUNTROWS(FILTER(fact_race_results, fact_race_results[status_id] IN VALUES(dim_status[status_id]))), COUNTROWS(fact_race_results))
+
+Fastest Lap %:
+  Fastest Lap Share := DIVIDE(COUNT(fact_race_results[fastest_lap]), COUNT(fact_race_results[result_id]))
+
+Circuit Revenue:
+  Circuit Revenue USD := SUMX(dim_circuit, dim_circuit[standard_seating]*dim_circuit[price_general_usd] + dim_circuit[vip_seating]*dim_circuit[price_vip_usd] + dim_circuit[vvip_seating]*dim_circuit[price_vvip_usd])
+"""),
+    ("3. PBIX Template Setup", """
+Model Tips:
+- Star schema with fact and dimension tables
+- Hide ID fields from report view
+
+Theme:
+- Dark background with racing accents (red, white, blue)
+- Consistent font styles
+
+Slicers:
+- Year, Driver, Constructor, Circuit, Race, Date
+"""),
+    ("4. Drill-through + Tooltip Setup", """
+Drill-through: Race Summary Page
+- Add dim_race[race_id] as Drill-through field
+- Add KPIs, lap times, pit stops, top 3 drivers
+
+Tooltip: Driver Quick View Page
+- Add dim_driver[driver_id] as filter
+- Show nationality, races, points, best finish
+- Format page as Tooltip
+
+Drill Controls:
+- Use Year → Month → Date in dim_date
+- Driver → Race → Lap or Constructor → Circuit → Race
+"""),
+    ("5. Exporting Options", """
+Export to PDF:
+- File > Export > PDF
+- Use 1280x720 resolution for print layout
+
+Mobile Layout:
+- View > Mobile layout
+- Top: slicers; Middle: KPIs; Bottom: charts
+- Prioritize readability, limit visuals
+""")
+]
+
+for title, body in sections:
+    pdf.chapter_title(title)
+    pdf.chapter_body(body)
+
+pdf.output("F1_PowerBI_Drilldown_Guide.pdf")

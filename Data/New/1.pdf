@@ -1,0 +1,92 @@
+1. **Top-performing drivers by season**
+
+   * `SUM(points)` grouped by `dim_driver` and `dim_race.year`
+   * Track championship trends over time
+
+2. **Best constructors (teams) by points**
+
+   * `SUM(points)` grouped by `dim_constructor`
+
+3. **Grid vs. Finish Position Performance**
+
+   * Compare `grid_position` vs. `finish_position` to see who gains or loses the most places per race
+
+4. **Win ratio by driver/constructor**
+
+   * `% of races where win_flag = true` for each driver or constructor
+
+
+### ⏱️ **Lap Time & Pit Stop Efficiency**
+
+5. **Fastest lap averages per driver/circuit**
+
+   * `AVG(fastest_lap_time_ms)` grouped by driver and/or circuit
+
+6. **Driver consistency over laps**
+
+   * `STDDEV(milliseconds)` in `fact_lap_times` — low variation = consistency
+
+7. **Pit stop strategy effectiveness**
+
+   * Compare total pit time vs. race result
+   * Optimal number of pit stops and lap number for each stop
+
+---
+
+### 🌍 **Circuit Insights**
+
+8. **Revenue Potential by Circuit**
+
+   * `capacity * price_general_usd`, `vip_seating * price_vip_usd`, etc.
+
+9. **Performance by Circuit Altitude**
+
+   * Do higher-altitude circuits affect laps, speeds, or DNFs?
+
+10. **Country-based analysis**
+
+* Total points or wins by circuit country
+* Home advantage (driver nationality = circuit country)
+
+---
+
+### 📅 **Time/Season Trends**
+
+11. **Performance by Quarter or Month**
+
+* Aggregate points or wins using `dim_date.quarter` or `month_name`
+
+12. **Race Outcomes by Weekday or Weekend**
+
+* See if weekend races yield different results (DNFs, crashes, fastest laps, etc.)
+
+13. **Holiday Races**
+
+* Any trends on performance or attendance when `is_holiday = TRUE`
+
+---
+
+### ⚠️ **Status / DNF (Did Not Finish) Trends**
+
+14. **Most common reasons for non-completion**
+
+* Group by `dim_status.status_description`
+
+15. **Constructor/Driver with most mechanical DNFs**
+
+* Helps analyze reliability
+
+---
+
+## 📊 Visualization Ideas (for dashboards)
+
+* Driver & Constructor leaderboards
+* Fastest lap heatmaps (driver vs. circuit)
+* Pit stop duration box plots
+* Race calendar with color-coded performance
+* Circuit map with win distribution
+* Year-over-year performance slope graphs
+
+---
+
+Would you like sample SQL queries or dashboard ideas built around one of these insights?
