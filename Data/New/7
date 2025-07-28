@@ -1,0 +1,30 @@
+Constructor Podiums :=
+CALCULATE (
+    COUNTROWS ( fact_race_results ),
+    fact_race_results[finish_position] <= 3
+)
+
+Avg Attendance :=
+AVERAGE ( dim_circuit[capacity] )
+
+Estimated Revenue USD :=
+SUMX (
+    dim_circuit,
+    dim_circuit[standard_seating] * dim_circuit[price_general_usd] +
+    dim_circuit[vip_seating] * dim_circuit[price_vip_usd] +
+    dim_circuit[vvip_seating] * dim_circuit[price_vvip_usd]
+)
+
+Races by Region :=
+COUNTROWS (
+    VALUES ( dim_race[race_id] )
+)
+
+Reliability Score :=
+DIVIDE (
+    COUNTROWS (
+        FILTER ( fact_race_results, dim_status[status_description] = "Finished" )
+    ),
+    COUNTROWS ( fact_race_results )
+)
+	
